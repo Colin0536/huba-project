@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>富巴huba中国</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft Yahei",sans-serif;}
+        :root{--main:#2563eb;--dark:#1e293b;--gray:#64748b;--light:#f8fafc;}
+        /*导航*/
+        header{background:#fff;box-shadow:0 2px 8px #eee;position:sticky;top:0;z-index:99;}
+        .nav-wrap{max-width:1200px;margin:0 auto;padding:0 20px;display:flex;justify-content:space-between;align-items:center;height:70px;gap:20px;position: relative; /* 只额外加这一行，用来做下拉菜单定位 */}
+        .logo{display:flex;align-items:center;gap:4px;}
+        .logo img{height:50px;object-fit:contain;}
+        .logo-text{font-size:24px;font-weight:bold;color:var(--main);}
+        .nav-menu a{margin:0 15px;text-decoration:none;color:var(--dark);transition:0.3s;}
+        .nav-menu a:hover{color:var(--main);}
+         /* 汉堡按钮：PC 端隐藏 */
+        .menu-toggle {display: none;border: none;background: none;font-size: 26px;cursor: pointer;color: var(--dark);}
+        /*右上角电话号码样式*/
+        .tel-box{white-space:nowrap;}
+        .tel-link{font-size:20px;color:#0055ee;text-decoration:none;font-weight:600;}
+        .tel-link:hover{color:#0033aa;}
+           /*手机端隐藏电话，防止导航拥挤， 暂时不用@media(max-width:768px){.tel-box{display:none;}}*/
+
+        /*轮播*/
+        .banner{width:100%;/* 把高度改成响应式，用 aspect-ratio 固定宽高比，避免拉伸 */aspect-ratio: 16 / 5; /* 你可以改成 16/4 或 16/6 调整高度 */overflow:hidden;position:relative;}
+/* 新增水印样式 */
+.banner::after{
+    content:"图片来源于网络，仅供展示用途"; /* 改成你要的水印文字 */
+    position:absolute;
+    bottom:15px; /* 水印距离底部的位置 */
+    right:20px; /* 水印距离右侧的位置 */
+    font-size:14px; /* 水印大小，可改 */
+    color:rgba(255,255,255,0.3); /* 半透明白色，不刺眼 */
+    background:rgba(0,0,0,0.2); /* 可选：加个深色背景条，文字更清晰 */
+    padding:4px 8px;
+    border-radius:4px;
+    pointer-events:none; /* 关键：不影响点击轮播箭头 */
+    z-index:3; /* 确保水印在轮播图上方 */
+}
+
+        .banner-wrap{width:100%;height:100%;display:flex;transition:0.6s ease;}
+        .banner-item{width:100%;flex-shrink:0;height:1080px;}
+        .banner-item img{width:100%;height:100%;object-fit: cover; /* 这个是关键，保持图片比例，裁剪多余部分，不会拉伸 */object-position: right center; /* 让图片右侧（产品）居中显示，不被裁掉 */}
+        .banner-arrow{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;background:rgba(255,255,255,0.3);color:#fff;text-align:center;line-height:42px;font-size:22px;border-radius:50%;cursor:pointer;transition:0.3s;}
+        .banner-arrow:hover{background:rgba(255,255,255,0.7);color:#333;}
+        .prev{left:30px;}.next{right:30px;}
+        .banner-dot{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:10px;}
+        .dot{width:12px;height:12px;border-radius:50%;background:#ffffff66;cursor:pointer;}
+        .dot.active{background:#fff;}
+
+        .container{max-width:1200px;margin:0 auto;padding:60px 20px;}
+        .title{text-align:center;margin-bottom:50px;}
+        .title h2{font-size:30px;color:var(--dark);margin-bottom:12px;}
+        .title span{display:inline-block;width:60px;height:3px;background:var(--main);}
+
+        /*筛选*/
+        .filter-box{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin-bottom:40px;}
+        .filter-btn{border:1px solid var(--main);padding:8px 20px;border-radius:30px;background:#fff;color:var(--main);cursor:pointer;transition:0.3s;}
+        .filter-btn.active{background:var(--main);color:#fff;}
+
+        /*产品列表*/
+        .product-box{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:30px;}
+        .product-item{border:1px solid #eee;border-radius:10px;overflow:hidden;transition:0.3s;cursor:pointer;background:#fff;}
+        .product-item.hide{display:none;}
+        .product-item:hover{transform:translateY(-6px);box-shadow:0 8px 24px #e2e8f0;}
+        .pro-img{height:200px;overflow:hidden;}
+        .pro-img img{width:100%;height:100%;object-fit:contain;}
+        .pro-info{padding:20px;}
+        .pro-info h3{margin-bottom:8px;color:var(--dark);}
+        .pro-price{color:var(--main);font-size:18px;font-weight:bold;margin:10px 0;}
+        .pro-desc{color:var(--gray);font-size:14px;line-height:1.6;}
+
+        /*应用场景*/
+        .apply{background:#f7f9fc;}
+        .apply-box{display:grid;grid-template-columns:repeat(4, 1fr); gap:25px;}
+        .apply-item{border-radius:8px;overflow:hidden;background:#fff;box-shadow:0 3px 12px #e6edf7;}
+        .apply-img{height:220px;overflow:hidden;}
+        .apply-img img{width:100%;height:100%;object-fit:cover;transition:0.4s;}
+        .apply-item:hover .apply-img img{transform:scale(1.06);}
+        .apply-text{padding:16px;}
+        .apply-text h4{margin-bottom:6px;color:var(--dark);}
+        .apply-text p{font-size:14px;color:var(--gray);}
+
+        .about{background:var(--light);}
+        .about-content{display:flex;gap:40px;align-items:center;flex-wrap:wrap;}
+        .about-left{flex:1;min-width:300px;height:320px;overflow:hidden;}
+        .about-left img{width:100%;height:100%;object-fit:cover;border-radius:8px;}
+        .about-right{flex:1;min-width:300px;}
+        .about-right p{color:var(--gray);line-height:1.8;margin-bottom:16px;}
+
+        .contact-box{display:flex;gap:40px;flex-wrap:wrap;}
+        .contact-form{flex:1;min-width:320px;}
+        .form-item{margin-bottom:18px;}
+        .form-item input,.form-item textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:6px;outline:none;font-size:15px;}
+        .form-item textarea{height:120px;resize:none;}
+        .submit{background:var(--main);color:#fff;border:none;padding:13px 30px;border-radius:6px;cursor:pointer;}
+        .contact-info{flex:1;min-width:300px;line-height:2.2;color:var(--gray);}
+
+        /*产品详情区块  默认隐藏*/
+        .detail-section{display:none;padding:60px 20px;background:#f5f5f5;}
+        .detail-back{max-width:1200px;margin:0 auto 20px;}
+        .detail-back a{border:1px solid var(--main);color:var(--main);padding:8px 18px;text-decoration:none;border-radius:4px;}
+        .detail-wrap{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:40px;background:#fff;padding:30px;border-radius:12px;}
+        .det-left{display:flex;align-items:center;justify-content:center;}
+        .det-img-wrap{display:flex;flex-direction:column; /* 图片自动上下排列 */gap:12px; /* 两张图之间的间距，可改 */max-width:90%;overflow:visible;/* max-height:70vh; 整体最大高度，避免超出屏幕 overflow:hidden;*/}
+        .det-img-wrap img{max-width:100%;/*max-height:calc(35vh - 6px);  单张图的最大高度，两张图自动平分 */object-fit:contain;}
+        .det-right .sm{color:#777;font-size:14px;}
+        .det-right h2{font-size:32px;margin:8px 0 15px;}
+        .det-desc{color:#555;line-height:1.7;margin-bottom:20px;}
+        .det-price{font-size:18px;color:var(--main);font-weight:bold;margin-bottom:30px;}
+
+        /*=====详情参数、规格CSS=====*/
+        .version-block{margin:30px 0;}
+        .ver-title{font-size:18px;margin-bottom:8px;background-color: #f0f9f0;padding: 6px 10px;border-radius: 4px;}
+        .ver-list p{font-size:14px;line-height:1.8;}
+
+        .range-block{margin:30px 0;}
+        .range-title{font-size:18px;margin-bottom:8px;background-color: #e8f0fe;padding: 6px 10px;border-radius: 4px;}
+        .range-list p{font-size:14px;line-height:1.8;}
+
+        .output-block{margin:30px 0;}
+        .out-title{font-size:18px;margin-bottom:8px;background-color: #fff9e6;padding: 6px 10px;border-radius: 4px;}
+        .out-list p{font-size:14px;line-height:1.8;}
+
+        .e-connect-block{margin:30px 0;}
+        .e-con-title{font-size:18px;margin-bottom:8px;background-color: #f5f3ff;padding: 6px 10px;border-radius: 4px;}
+        .e-con-list p{font-size:14px;line-height:1.8;}
+
+        .p-connect-block{margin:30px 0;}
+        .p-con-title{font-size:18px;margin-bottom:8px;background-color: #f8f9fa;padding: 6px 10px;border-radius: 4px;}
+        .p-con-list p{font-size:14px;line-height:1.8;}
+
+        /*Request按钮改为亮黄色黑字*/
+        .det-btn{width:100%;background:#ffd200;color:#000;border:none;padding:14px;border-radius:99px;font-size:15px;cursor:pointer;font-weight:500;}
+
+        /*弹窗*/
+        .mask{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;z-index:999;}
+        .pop{width:90%;max-width:520px;background:#fff;padding:30px;border-radius:10px;position:relative;}
+        .close{position:absolute;right:18px;top:15px;font-size:22px;cursor:pointer;color:#999;}
+        .pop-img{width:100%;height:260px;background:#eee;border-radius:6px;margin-bottom:15px;overflow:hidden;}
+        .pop-img img{width:100%;height:100%;object-fit:cover;}
+
+        /*底部*/
+        footer{background:var(--dark);color:#b1b5bd;padding:40px 20px;}
+        .footer-wrap{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:30px;align-items:center;margin-bottom:20px;}
+        .footer-text p{line-height:1.8;}
+        .footer-qrcode{display:flex;gap:30px;}
+        .qr-item{text-align:center;}
+        .qr-item img{width:110px;height:110px;background:#fff;padding:5px;border-radius:6px;}
+        .qr-item p{margin-top:8px;font-size:14px;}
+        .copyright{text-align:center;border-top:#333 solid 1px;padding-top:20px;}
+
+        @media(max-width:768px){
+        .nav-menu a{margin:0 6px;font-size:13px;}
+        .banner{aspect-ratio: 16 / 3; /* 统一用宽高比，去掉height:280px */}
+        .banner-item{height:auto; /* 让高度随父容器自适应 */}
+        .detail-wrap{grid-template-columns:1fr;}
+        .footer-wrap{justify-content:center;text-align:center;}
+        .footer-qrcode{flex-wrap:wrap;justify-content:center;}
+        /* 关于我们轮播 手机端高度 */
+        .about-left{ height: 220px; /* 这里就是你之前问的高度，可改 */}
+        .det-img-wrap img{max-height:calc(30vh - 6px);}
+/* 手机端适配（max-width:768px） */
+            /* 1. 手机端：Logo 改为 图片在上、文字在下 纵向排列 */
+            .logo{flex-direction: column;gap: 4px;}
+           .logo img {height: 36px;}
+           .logo-text {font-size: 18px;}
+            /* 2. 调整导航栏布局，把热线固定在右侧.nav-wrap {position: relative;display: flex;align-items: center;justify-content: space-between;} */
+
+           /* 3. 显示汉堡按钮，把导航菜单收进下拉 */
+           .menu-toggle {display: block;order: 3; /* 把按钮放在热线前面 */}
+           .nav-menu {position: absolute;top: 70px; /* 和 header 高度一致 */left: 0;right: 0;background: #fff;flex-direction: column;padding: 16px 20px;box-shadow: 0 4px 8px rgba(0,0,0,0.1);display: none; /* 默认隐藏 */}
+          /* 展开状态 */
+          .nav-menu.active {display: flex;}
+          .nav-menu a {margin: 0;padding: 8px 0;font-size: 15px;}
+          /* 4. 热线电话：手机端保留在导航栏右侧，不隐藏 */
+          .tel-box {order: 2; /* 让热线在汉堡按钮左边 */margin-right: 10px;}
+          .tel-link {font-size: 14px;color: var(--main);font-weight: bold;}
+}
+@media(max-width:992px){
+    .apply-box{grid-template-columns: repeat(2,1fr);}
+}
+@media(max-width:576px){
+    .apply-box{grid-template-columns: repeat(1,1fr);}
+}
+/* 关于我们左侧轮播 样式完全同步首页轮播 */
+.about-left{
+    position: relative;
+    height: 400px;
+    overflow: hidden;
+    border-radius:8px;
+}
+.about-banner{
+    width:100%;
+    height:100%;
+    position:relative;
+}
+.about-wrap{
+    width:100%;
+    height:100%;
+    display:flex;
+    transition:0.6s ease;
+}
+.about-item{
+    width:100%;
+    flex-shrink:0;
+    height:100%;
+}
+.about-item img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+/* 箭头样式 = 首页轮播箭头 */
+.about-arrow{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    width:42px;
+    height:42px;
+    background:rgba(255,255,255,0.3);
+    color:#fff;
+    text-align:center;
+    line-height:42px;
+    font-size:22px;
+    border-radius:50%;
+    cursor:pointer;
+    transition:0.3s;
+    z-index:2;
+}
+.about-arrow:hover{
+    background:rgba(255,255,255,0.7);
+    color:#333;
+}
+.about-arrow.prev{left:30px;}
+.about-arrow.next{right:30px;}
+
+/* 圆点样式 = 首页轮播圆点 */
+.about-dot{
+    position:absolute;
+    bottom:20px;
+    left:50%;
+    transform:translateX(-50%);
+    display:flex;
+    gap:10px;
+    z-index:2;
+}
+.about-dot .dot{
+    width:12px;
+    height:12px;
+    border-radius:50%;
+    background:#ffffff66;
+    cursor:pointer;
+}
+.about-dot .dot.active{
+    background:#fff;
+}
+/* 产品卡片内嵌轮播 */
+.pro-card-carousel {
+  width:100%;
+  height:200px;
+  overflow:hidden;
+  position:relative;
+}
+.card-track {
+  display:flex;
+  height:100%;
+  transition:transform 0.4s ease;
+}
+.card-slide {
+  flex:0 0 100%;
+  height:100%;
+}
+.card-slide img {
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+}
+/* 卡片小圆点 */
+.card-dots {
+  position:absolute;
+  bottom:6px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:4px;
+}
+.card-dot {
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:#ccc;
+}
+.card-dot.active {
+  background:var(--main);
+}
+/* 应用场景卡片轮播-淡入模式 */
+.apply-card-carousel {
+  width:100%;
+  height:220px;
+  overflow:hidden;
+  position:relative;
+}
+.apply-track {
+  width:100%;
+  height:100%;
+  position:relative;
+}
+.apply-slide {
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  opacity:0;
+  transition:opacity 0.5s ease-in-out; /* 淡入淡出时长可改 0.5s */
+  z-index:1;
+}
+.apply-slide.active {
+  opacity:1;
+  z-index:2;
+}
+.apply-slide img {
+  width:100%;
+  height:100%;
+  object-fit:contain; /* 替换原来的cover */
+  display:block;
+  transition:0.4s;
+}
+/* hover放大保留 */
+.apply-item:hover .apply-slide img {
+  transform:scale(1.06);
+}
+/* 小圆点不变 */
+.apply-dots {
+  position:absolute;
+  bottom:8px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:5px;
+  z-index:3;
+}
+.apply-dot {
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#ffffff80;
+  cursor:pointer;
+}
+.apply-dot.active {
+  background:#fff;
+}
+    </style>
+</head>
+<body>
+<header>
+    <div class="nav-wrap">
+        <div class="logo">
+            <img src="images/logo.png" alt="LOGO">
+            <span class="logo-text">岩锡工业</span>
+        </div>
+
+    <!-- 汉堡菜单按钮（只在手机端显示） -->
+    <button class="menu-toggle" id="menuToggle">☰</button>
+
+        <!-- 导航菜单（PC端横向，手机端收进下拉） -->
+        <nav class="nav-menu">
+            <a href="#home">首页</a>
+            <a href="#product">产品中心</a>
+            <a href="#apply">应用场景</a>
+            <a href="#about">关于我们</a>
+            <a href="#contact">联系我们</a>
+        </nav>
+  <!-- 可点击拨号电话 a标签 tel: 手机点击直接唤起拨 PC/手机端都放在外面 -->
+        <div class="tel-box">
+            <a href="tel:18621658180" class="tel-link">📞 186-2165-8180</a>
+        </div>
+    </div>
+</header>
+
+<section class="banner" id="home">
+    <div class="banner-wrap" id="bannerWrap">
+        <div class="banner-item"><img src="images/huba-banner1.jpg" alt="轮播"></div>
+        <div class="banner-item"><img src="images/huba-banner2.jpg" alt="轮播"></div>
+        <div class="banner-item"><img src="images/huba-banner3.jpg" alt="轮播"></div>
+        <div class="banner-item"><img src="images/huba-banner4.jpg" alt="轮播"></div>
+    </div>
+    <div class="banner-arrow prev" id="prevBtn">&lt;</div>
+    <div class="banner-arrow next" id="nextBtn">&gt;</div>
+    <div class="banner-dot" id="dotBox"></div>
+</section>
+
+<section id="product" class="container">
+    <div class="title">
+        <h2>产品中心</h2>
+        <span></span>
+    </div>
+    <div class="filter-box">
+        <button class="filter-btn active" data-type="all">全部产品</button>
+        <button class="filter-btn" data-type="pressure">压力变送器</button>
+        <button class="filter-btn" data-type="diff-pressure">差压变送器</button>
+        <button class="filter-btn" data-type="switch">压力开关</button>
+        <button class="filter-btn" data-type="flow">流量传感器</button>
+        <button class="filter-btn" data-type="level">液位传感器</button>
+        <button class="filter-btn" data-type="temperature">温度传感器</button>
+    </div>
+    <div class="product-box" id="proList"></div>
+</section>
+
+<!-- 产品详情区域 -->
+<section class="detail-section" id="detailBox">
+    <div class="detail-back"><a href="#product" onclick="hideDetail()">← 返回产品列表</a></div>
+    <div class="detail-wrap">
+        <div class="det-left">
+  <div class="det-img-wrap" id="detImgWrap">
+    <!-- JS 会在这里动态渲染图片，不再需要单独的 id="dImg" -->
+  </div>
+</div>
+        <div class="det-right">
+            <p class="sm">TORQUE SEALANT</p>
+            <h2 id="dName"></h2>
+            <div class="det-desc" id="dDesc"></div>
+
+            <!-- 版本类型 -->
+            <div class="version-block">
+                <div class="ver-title">版本Version</div>
+                <div class="ver-list" id="verHtml"></div>
+            </div>
+
+            <!-- 测量范围区域 -->
+            <div class="range-block">
+               <div class="range-title">测量范围Ranges</div>
+               <div class="range-list" id="rangeHtml"></div>
+            </div>
+
+            <!-- 输出和供电区域 -->
+            <div class="output-block">
+                <div class="out-title">输出、供电Output and Power Supply</div>
+                <div class="out-list" id="outputHtml"></div>
+            </div>
+
+            <!-- 电气连接区域 -->
+            <div class="e-connect-block">
+                <div class="e-con-title">电气连接Electrical connection</div>
+                <div class="e-con-list" id="e-conHtml"></div>
+            </div>
+
+            <!-- 压力连接区域 -->
+            <div class="p-connect-block">
+                <div class="p-con-title">压力连接Pressure connection</div>
+                <div class="p-con-list" id="p-conHtml"></div>
+            </div>
+
+            <button class="det-btn" onclick="goContact()">获取更多详情、价格与货期</button>
+        </div>
+    </div>
+</section>
+
+<section id="apply" class="apply">
+    <div class="container">
+        <div class="title">
+            <h2>产品应用场景</h2>
+            <span></span>
+        </div>
+        <div class="apply-box" id="applyList"></div>
+    </div>
+</section>
+
+<section class="about" id="about">
+    <div class="container">
+        <div class="title">
+            <h2>关于我们</h2>
+            <span></span>
+        </div>
+        <div class="about-content">
+            <!-- 左侧 图片轮播 -->
+            <div class="about-left">
+                <div class="about-banner">
+                    <div class="about-wrap" id="aboutWrap">
+                        <div class="about-item"><img src="images/company1.jpg" alt="厂区"></div>
+                        <div class="about-item"><img src="images/company2.jpg" alt="厂区"></div>
+                        <div class="about-item"><img src="images/company3.jpg" alt="厂区"></div>
+                        <div class="about-item"><img src="images/company.jpg" alt="厂区"></div>
+                    </div>
+                    <div class="about-arrow prev" id="aboutPrev">&lt;</div>
+                    <div class="about-arrow next" id="aboutNext">&gt;</div>
+                    <div class="about-dot" id="aboutDotBox"></div>
+                </div>
+            </div>
+            <!-- 右侧文字 完全不变 -->
+            <div class="about-right">
+                <p>本公司是该品牌位于中国的授权代理商。</p>
+                <p>岩锡工业成立于2017年，是集产品技术选型、成套组装、销售、售后服务于一体的综合服务商，拥有多个品牌的代理授权。</p>
+                <p>公司业务领域涉及冶金钢铁、汽车制造、轨道交通、航空航天产业、电力电厂、暖通监测、新能源、半导体、人工智能等重点行业，以提供生产线上的技术解决方案为主；</p>
+                <p>岩锡工业以规范化的管理、简单快捷的供应模式、优良完善的售后服务迎接更好的未来！</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="contact" class="container">
+    <div class="title">
+        <h2>联系我们</h2>
+        <span></span>
+    </div>
+    <div class="contact-box">
+        <div class="contact-form">
+            <div class="form-item"><input type="text" id="name" placeholder="姓名"></div>
+            <div class="form-item"><input type="tel" id="tel" placeholder="电话"></div>
+            <div class="form-item"><textarea id="msg" placeholder="留言"></textarea></div>
+            <button class="submit" id="subBtn">提交留言</button>
+        </div>
+        <div class="contact-info">
+            <p>📍上海市松江区松江产业园</p>
+            <p>📞0086 18621658180</p>
+            <p>📧colin@origist.com</p>
+        </div>
+    </div>
+</section>
+
+<div class="mask" id="popMask">
+    <div class="pop">
+        <span class="close" onclick="closePop()">×</span>
+        <div class="pop-img"><img id="popImg" src="" alt=""></div>
+        <h3 id="popTitle"></h3>
+        <p id="popPrice" style="color:#2563eb;font-size:18px;margin:10px 0;"></p>
+        <p id="popDesc"></p>
+    </div>
+</div>
+
+<footer>
+    <div class="footer-wrap">
+        <div class="footer-text">
+            <p>岩锡工业</p>
+            <p>地址：上海市松江区松江产业园</p>
+            <p>电话：021-20423688</p>
+        </div>
+        <div class="footer-qrcode">
+            <div class="qr-item"><img src="images/wx-qrcode.jpg"><p>公众号</p></div>
+            <div class="qr-item"><img src="images/wx-qrcode.jpg"><p>客服微信</p></div>
+        </div>
+    </div>
+    <div class="copyright">©2025 岩锡®工业 版权所有 | Copyright</div>
+</footer>
+
+<script>
+const productData = [
+    {
+        name:"520压力变送器 52x......",
+        subTitle:"Relative pressure transmitter",
+        price:"查看详情",
+        desc:`520 型压力变送器结构紧凑，采用富巴控制公司开发的厚膜技术，压力测量芯片与压力变送器无缝焊接。它们能精确记录高达 1000 bar 的相对压力，具有很高的爆破安全性、可靠性和长期稳定性。
+520 压力变送器适用于液体和气体，包括所有制冷剂和氨。这使它们成为从工业工艺或 HVAC 系统到轨道车辆部件等广泛应用领域的可靠解决方案。相应的认证（如增强抗干扰能力的电磁兼容性、抗冲击性和抗震性）以及 UL、EN 45545-2、ATEX 和 IECex.X1Z 等认证都证实了这些产品在不同应用领域的适用性。 和 IECex 认证。
+
+• 紧凑坚固的不锈钢设计
+• 无密封圈的密封焊接结构，无泄漏风险
+• 连接器种类繁多
+• 通过快速电缆接头，客户可以省时、快速地安装电缆`,
+        img: ["images/520-pro1.jpg", "images/520-pro2.jpg", "images/520-pro3.jpg"],
+        type:"pressure",
+        versions:["标准","用于纯氧气应用","饮用水批准NSF /ANSI 61/372，WRAS"],
+        ranges:["-1 ... 9 bar","0 ... 2.5 bar - 1000 bar 未一一列举,请咨询","0 ... 25 bar","0 ... 40 bar","0 ... 250 bar","0 ... 400 bar","0 ... 600 bar"],
+        outputs:["0 ... 5 V / 7 ... 33 VDC","1 ... 6 V / 8 ... 33 VDC","0 ... 10 V / 12 ... 33 VDC 可选增强EMC保护","4 ... 20 mA / 7 ... 33 VDC 可选增强EMC保护","4 ... 20 mA / 10 ... 30 VDC 防爆保护","比例输出. 10 ... 90% / 5 VDC ±10% 可选防爆保护"],
+        "e-cons":["接头 赫斯曼接头 或 M12 x 1","编织电缆 80/290/480/730 ± 10 mm","快速接头 可带线缆1.5/2/3/5米"],
+        "p-cons":["内螺纹 / G ¼带O型密封圈FPM 可定制可选其他尺寸 ","外螺纹 / G ¼ 后端密封，带FPM型密封圈","外螺纹 / 可定制可选其他尺寸"]
+    },
+{
+        name:"5xx系列-压力变送器 511",
+        subTitle:"Relative pressure transmitter",
+        price:"查看详情",
+        desc:`结构紧凑的 511 型压力变送器在坚固性、精确度、温度稳定性和电磁兼容性方面都能满足最高要求。因此，它们适用于各种工业应用。
+• 结构紧凑、坚固耐用，可实现最高的运行可靠性
+• 如果超过爆破压力，介质不会泄漏
+• 温度对精度的影响最小
+• 出色的电磁兼容性
+• 通过快速电缆接头，客户可以省时、快速地安装电缆`,
+        img: ["images/501-pro1.jpg", "images/511-pro1.jpg", "images/515-pro1.jpg"],
+        type:"pressure",
+        versions:["相对压力","绝对压力"],
+        ranges:["-1 ... 0 bar","0 ... 1 bar - 600 bar 未一一列举,请咨询","0 ... 1.6 bar","0 ... 40 bar","0 ... 250 bar","0 ... 400 bar","0 ... 600 bar"],
+        outputs:["0 ... 5 V / 8.0 ... 33 VDC","1 ... 6 V / 8.0 ... 33 VDC","0 ... 10 V / 11.4 ... 33 VDC 可选24 VAC ±15%","4 ... 20 mA / 8.0 ... 33 VDC","比例式10 ... 90% / 5 VDC ±10%"],
+        "e-cons":["接头 赫斯曼 或 M12 x 1","电缆线 1.5m","快速接头"],
+        "p-cons":["内螺纹 / G ¼，带O型圈密封 (不带压力阻尼) ","外螺纹 / G ¼ 后端密封","外螺纹 / M14x1.5，后端密封","外螺纹 / 可定制可选其他尺寸"]
+    },
+{
+        name:"210系列涡街流量传感器",
+        subTitle:"Flow sensor for liquid media",
+        price:"查看详情",
+        desc:`210 型流量传感器为供电和输出接口提供了多种配置选项。由于采用免维护设计，涡街流量传感器没有活动部件，因此对污染不敏感。此外，它们还具有压力损失小、测量精度极高的特点。可选配集成温度测量功能的变体。
+
+• 流量测量可选择电压、电流、脉冲或频率输出
+• 出色的耐介质性（测量元件不接触介质）
+• 可选择集成温度测量功能
+• 对温度不敏感的测量原理
+• 宽广的温度应用领域
+• 低压力损失
+• 抗污测量元件
+• 饮用水认证 KTW, W270, ACS, WRAS, UBA 1+
+
+R290 就绪： 该传感器已通过 EN IEC 60335-2-40 标准的 VDE 标志认证，可安全用于使用丙烷 (R290) 的热泵 - 请根据数据表/证书注意应用限制和介质兼容性。`,
+        img: ["images/200-pro1.jpg", "images/210-pro1.jpg", "images/212-pro1.jpg"],
+        type:"flow",
+        versions:["仅流量测量","流量和温度测量"],
+        ranges:["DN6 0.5 ... 10 l/min.","DN8 0.9 ... 15 l/min.","DN10 1.8 ... 32 l/min.或 2.0 ... 40 l/min.","DN15 3.5 ... 50 l/min.","DN20 5.0 ... 85 l/min.","DN25 9.0 ... 150 l/min."],
+        outputs:["0 ... 10 V / 1.5 ... 33 VDC","4 ... 20 mA / 8 ... 33 VDC","4 ... 20 mA / 10 ... 33 VDC"],
+        "e-cons":["Connector M12 x 1_3-pole","Connector M12 x 1_5-pole"],
+        "p-cons":["Plastic PA6T / 6I"]
+    },
+{
+        name:"机械压力开关625/620系列",
+        subTitle:"Mechanical pressure switch",
+        price:"查看详情",
+        desc:`620/625 型压力开关有 13 个压力范围等级，适用于液体和气体。压力连接材料有 ABS、PA 66、黄铜或铝，膜片材料有 NBR、FPM、EPDM 或硅胶。测量范围精确，长期稳定性高。设计坚固，因此特别适用于一般设备工程、工艺工程和食品自动化。
+
+• 压力范围刻度设计理想，精度高
+• 可调节开关差动
+• 长期稳定性高，开关点的再现性 < ±0.3 毫巴
+• 可在出厂设置自定义开关点
+• 坚固耐用、性价比高的工业交换机
+• 最佳性价比`,
+        img: ["images/625-pro1.jpg", "images/620-pro1.jpg", "images/625-pro2.jpg"],
+        type:"switch",
+        versions:["测量空气","中性气体","测负压-625系列"],
+        ranges:["2 ... 8 mbar","6 ... 75 mbar","12.5 ... 80 mbar","12.5 ... 200 mbar","25 ... 220 mbar","-4 ... -30 mbar","-15 ... -80 mbar","可选可定制其他压力范围"],
+        outputs:["开关量输出"],
+        "e-cons":["公称电压250 VAC 电阻负载 1A  6A"],
+        "p-cons":["620-内/外螺纹 M5 / M12x1","620-连接管/螺纹 Ø 6 毫米 / M12x1","625-沉头螺母带螺纹 M12x1,G ⅛, G ¼"]
+    },
+
+ {
+        name:"压力变送器 550 系列",
+        subTitle:"Relative and absolute pressure transmitter",
+        price:"查看详情",
+        desc:`550 型压力变送器可满足移动液压应用领域的最高要求。该传感器的防护等级为 IP67 或 IP69K，标配压力缓冲器，可防止压力峰值。紧凑坚固的设计符合 ISO 16750 汽车标准对抗冲击性和抗震性的要求。 550 压力变送器还能最大程度地保证抗电磁兼容性，符合各种机动车辆指令，测试水平可达 100 V/m。测量单元基于富巴控制公司开发的不锈钢厚膜技术。它无缝焊接在压力变送器上。
+• 结构紧凑、坚固耐用，可实现最高的运行可靠性
+• 无密封圈焊接
+• 出色的电磁兼容性
+• 温度对精度的影响最小
+• 无弹性密封件
+• 长期稳定性高`,
+        img: ["images/550-pro1.jpg", "images/550-pro2.jpg"],
+        type:"pressure",
+        versions:["表压"],
+        ranges:["0 ... 40 bar","0 ... 60 bar","0 ... 100 bar","0 ... 160 bar","0 ... 250 bar","0 ... 400 bar","0 ... 600 bar"],
+        outputs:["0 ... 5 V / 7 ... 33 VDC","0 ... 10 V / 12 ... 33 VDC","4 ... 20 mA / 7.5 ... 33 VDC","比例输出. 10 ... 90% / 5 VDC ±10%"],
+        "e-cons":["接头 M12 x 1","Deutsch DT04-3P","Kostal SLK 2.8 coding A"],
+        "p-cons":["外螺纹 / 7/16 -20 UNF ","外螺纹 / G ¼ 后端密封，带FPM型密封圈","外螺纹 / 可定制可选其他尺寸"]
+    },
+ {
+        name:"压力变送器 548 系列",
+        subTitle:"Pressure Transmitter with display and programmable",
+        price:"查看详情",
+        desc:`548 系列 µP 控制可编程压力变送器采用坚固耐用的工业设计。参数可通过配置菜单轻松设置，使用两个易于操作的功能键，最多可设置两个可编程开关点。所有设备都具有诊断功能。大型 4 位 LED 显示屏确保了良好的可读性。548 压力变送器基于富巴控制公司开发的陶瓷技术，该技术已在数百万应用中使用了 20 多年。
+
+• 设计紧凑、坚固耐用
+• 高压安全
+• 易于阅读的显示屏
+• 操作简单
+• 诊断选项
+• 可提供模拟信号
+• 最多有两个可编程开关输出`,
+        img: ["images/548-pro1.jpg", "images/548-pro2.jpg"],
+        type:"pressure",
+        versions:["1个信号输出","2个信号输出"],
+        ranges:["-1 ... 0 bar","0 ... 1 bar","0 ... 2.5 bar","0 ... 6 bar","0 ... 10 bar","0 ... 16 bar","0 ... 40 bar"],
+        outputs:["0 ... 10 V / 17 ... 33 VDC","4 ... 20 mA / 17 ... 33 VDC"],
+        "e-cons":["M12 x 1","M12 x 1-NPN","M12 x 1-PNP"],
+        "p-cons":["内螺纹 / 7/16 -20 UNF ","内螺纹 / ¼ -18 NPT ","外螺纹 / G ¼ 后端密封，带FPM型密封圈","外螺纹 / 可定制可选其他尺寸"]
+    },
+{
+        name:"涡街流量传感器 236/237系列",
+        subTitle:"Flow sensor for liquid media",
+        price:"查看详情",
+        desc:`236 型流量传感器基于卡曼涡街原理。它们与同类产品 210 型的不同之处在于其黄铜外壳。236 型涡街流量传感器为供电和输出接口提供了多种配置选项。由于采用免维护设计，涡街流量传感器没有活动部件，因此对污染不敏感。此外，它们还具有压力损失小、测量精度极高的特点。可选配集成温度测量功能的型号。
+
+• 对温度不敏感的测量原理
+• 出色的耐介质性（测量元件不接触介质）
+• 可选配温度测量功能
+• 压力损失小，测量精度高
+• 抗污测量元件
+• 直接在介质中测量温度
+• 饮用水认证 KTW, W270, ACS, WRAS, UBA 1+
+测量精度高`,
+        img: ["images/236-pro1.jpg", "images/237-pro1.jpg", "images/236-pro2.jpg"],
+        type:"flow",
+        versions:["仅流量测量","流量和温度PT100测量"],
+        ranges:["236_0.9 ... 240 l/min","237_1.1 ... 240 l/min"],
+        outputs:["236_频率或脉冲输出 / 4.75 ... 33 VDC","237_0 ... 10 V / 11.5 ... 33 VDC","237_4 ... 20 mA / 8 ... 33 V或10 ... 33 VDC"],
+        "e-cons":["M12x1接头"],
+        "p-cons":["DN 8 / 10 / 15 / 20 / 25 / 32带冷凝保护"]
+    },
+    {
+        name:"差压变送器692/699/652系列",
+        subTitle:"Relative and differential pressure transmitter",
+        price:"查看详情",
+        desc:`699 型差压变送器可选择的压力量程范围有带或不带显示屏两种。完整版还包括更多自定义设置选项。为每个压力范围专门开发的传感器可实现物理精确和长期稳定的测量。变送器种类繁多，可广泛应用于空调技术以及工业和医疗领域的精细测量。
+
+• 可选择带或不带 LCD 显示屏
+• 可调节测量范围
+• 可切换输出信号
+• 可切换特性曲线（线性或平方根输出）
+• 归零按钮
+• 客户可调整的最终价值
+• 极具吸引力的性价比
+• 可在正压和负压应用领域使用
+• 安装简单。安装支架集成在外壳中，可安装在墙壁或天花板上`,
+        img: ["images/692-pro1.jpg", "images/699-pro1.jpg", "images/652-pro1.jpg"],
+        type:"diff-pressure",
+        versions:[],
+        ranges:["652_0 ... 50 – 1000 mbar","692_0 ... 0.1 – 25 bar","699_-1 ... 1 mbar / 0 ... 0.3 – 50 mbar"],
+        outputs:["0 ... 10 V","4 ... 20 mA","692_ratiom. 10 ... 90% 5 VDC ±5%"],
+        "e-cons":["652_螺丝端子","692_插头"],
+        "p-cons":["652_螺纹连接","692_软管或螺纹","699_连接管Ø6.2 mm"]
+    },
+ {
+        name:"压力变送器 528",
+        subTitle:"Relative and absolute pressure transmitter",
+        price:"查看详情",
+        desc:`528 型压力变送器结构紧凑，采用了富巴控制公司开发的陶瓷技术，20 多年来已应用于数百万个场合。这些压力变送器适用于各种工业应用。
+
+• 设计紧凑、坚固耐用
+• 温度对精度的影响最小
+• 连接器
+• 通过快速电缆接头，客户可以省时、快速地安装电缆`,
+        img: ["images/528-pro1.jpg", "images/528-pro2.jpg"],
+        type:"pressure",
+        versions:["标准","用于纯氧气应用","饮用水批准NSF 61"],
+        ranges:["-1 ... 0 bar","0 ... 40 bar 表压","0 ... 16 bar 绝压","0 ... 60 bar 绝压","0 ... 1.6 bar 表压","......"],
+        outputs:["0 ... 5 V / 7 ... 33 VDC","1 ... 6 V / 8 ... 33 VDC","0 ... 10 V / 12 ... 33 VDC 可选增强EMC保护","4 ... 20 mA / 7 ... 33 VDC 可选增强EMC保护","4 ... 20 mA / 10 ... 30 VDC 防爆保护","比例输出. 10 ... 90% / 5 VDC ±10% 可选防爆保护"],
+        "e-cons":["接头 赫斯曼接头 或 M12 x 1","编织电缆 80/290/480/730 ± 10 mm","快速接头 可带线缆1.5/2/3/5米"],
+        "p-cons":["内螺纹 / G ¼带O型密封圈FPM 可定制可选其他尺寸 ","外螺纹 / G ¼ 后端密封，带FPM型密封圈","外螺纹 / 可定制可选其他尺寸"]
+    },
+    {
+        name:"机械差压开关630/604/605系列",
+        subTitle:"Relative and differential pressure switch",
+        price:"查看详情",
+        desc:`630 型差压开关适用于卫生和加热系统中的流量监控或一般工艺工程中的液位控制。极其坚固的设计允许系统压力和单边过载高达 20 巴。
+
+• 两个接口（P1、P2）上的超压安全性都很高，最高可达 10/20 巴
+• 功能简单、坚固耐用的机械装置，运行可靠性高
+• 也适用于稍有侵蚀性的过程介质和气体
+• 重复性可达 < ±0.4 毫巴`,
+        img: ["images/604-pro1.jpg", "images/630-pro1.jpg", "images/605-pro1.jpg"],
+        type:"switch",
+        versions:["空气","中性气体","630_液体"],
+        ranges:["604_0.2 ... 3 – 50 mbar","630_6 ... 5500 mbar","605_20 ... 400 Pa (相对与差压)"],
+        outputs:["开关量"],
+        "e-cons":["604_螺丝端子或AMP连接器","605_AMP接头","630_触点AgCdO"],
+        "p-cons":["604_软管Ø 6.2 mm或内螺纹G ⅛","605_软管Ø 6.2 mm","630_黄铜或阳极氧化铝"]
+    },
+    {
+        name:"静压液位变送器 711",
+        subTitle:"Level sensing pressure transmitter",
+        price:"查看详情",
+        desc:`711 型静压液位变送器配有相对压力测量单元，可将静压液位压力转换为 4 ... 20 mA 输出信号。电缆长度从 3 米到 300 米不等。还可提供带防爆保护和饮用水认证的型号。
+
+• 可提供防爆保护
+• 高精度
+• 电缆长度从 3 ... 300 米不等
+• 深度压力范围
+• 提供耐海水版本`,
+        img: ["images/711-pro1.jpg", "images/711-pro2.jpg"],
+        type:"level",
+        versions:["超轻质取暖油 (SN 181 160-2)",";重质取暖油 (SN 181 160-2);","柴油（燃料）; 汽油; 海水; 饮用水"],
+        ranges:["-1 ... 9 bar","0 ... 2.5 bar","0 ... 4 bar","0 ... 6 bar","0 ... 10 bar"],
+        outputs:["4 ... 20 mA / 10 ... 33 VDC"],
+        "e-cons":["连接电缆3/5/10米","连接电缆300米内多种可选"],
+        "p-cons":["不锈钢 1.4404 (AISI 316L)"," 不锈钢 1.4539 (AISI 904L)"]
+    },
+   {
+        name:"工业热电阻温度传感器9202系列",
+        subTitle:"Industrial thermistor temperature sensor",
+        price:"查看详情",
+        desc:"9202系列工业温度传感器可以直接测量生产过程中-50°C...+400°C范围内的液体、气体介质以及固体表面等的温度。它广泛用于石油、化工、机械、冶金、电力、轻纺、食品、原子能、宇航、新能源等工业部门和科技领域。",
+        img: ["images/9202-pro1.jpg","images/9202-pro2.jpg","images/9202-pro3.jpg"],
+        type:"temperature",
+        versions:["PT","NTC","模拟量"],
+        ranges:["-50 ℃... 400 ℃","插入深度30/50/100/200mm 可自定义"],
+        outputs:["4...20mA","自定义要求"],
+        "e-cons":["赫斯曼插头","AMP","M12 x 1"],
+        "p-cons":["外螺纹 / G ¼","M16 x 1.5螺纹","可自定义螺纹"]
+    }
+];
+const applyData = [
+    {img:["images/apply1-1.jpg","images/apply1-2.jpg","images/apply1-3.jpg","images/apply1-4.jpg","images/apply1-5.jpg","images/apply1-6.jpg"],title:"住宅建筑",info:"我们为住宅楼暖通空调系统提供的传感器解决方案有助于营造舒适节能的生活环境。它们有助于精确控制供暖和制冷系统，最大限度地降低能耗。"},
+    {img:["images/apply2-1.jpg","images/apply2-2.jpg","images/apply2-3.jpg","images/apply2-4.jpg","images/apply2-5.jpg","images/apply2-6.jpg"],title:"商业建筑",info:"在商业建筑中，精确的暖通空调系统对保持舒适的室内环境至关重要。富巴控制公司生产的压力和流量传感器可提供满足最苛刻要求所需的精确度和可靠性。"},
+    {img:["images/apply3-1.jpg","images/apply3-2.jpg","images/apply3-3.jpg","images/apply3-4.jpg","images/apply3-5.jpg"],title:"数据中心",info:"压力和流量传感器是数据中心中使用空气和/或工艺介质的冷却设备的最佳选择，例如 CRAC（计算机房空调）、CDU（冷却液分配单元）和机架内 CDU 系统。它们可确保可靠、精确的测量数据，从而实现冷却和过滤系统的优化和高效运行。"},
+    {img:["images/apply4-1.jpg","images/apply4-2.jpg","images/apply4-3.jpg","images/apply4-4.jpg","images/apply4-5.jpg","images/apply4-6.jpg"],title:"水处理和废水处理",info:"我们的传感器可为水处理、废水处理和泵提供精确的测量数据。它们能够对工艺进行最佳监控，以确保效率和可持续发展。"},
+    {img:["images/apply5-1.jpg","images/apply5-2.jpg","images/apply5-3.jpg"],title:"移动液压",info:"压力变送器可满足移动液压应用的高要求，在全球范围内得到广泛应用。它们的特点是在苛刻的工作条件下具有高精度和高可靠性。"},
+    {img:["images/apply6-1.jpg","images/apply6-2.jpg","images/apply6-3.jpg","images/apply6-4.jpg"],title:"工业自动化",info:"5xx 系列压力变送器可在 1 mbar 至 1000 bar 范围内进行精确的绝对压力和相对压力测量。这些传感器应用广泛，通过了相关饮用水认证、UL 认证/防爆保护和可选防爆保护，是工业自动化领域高要求测量任务的理想之选。"},
+    {img:["images/apply7-1.jpg","images/apply7-2.jpg"],title:"风电行业",info:"我们的传感器差压变送器可以应用到风力发电系统中，为风电能源保驾护航。"},
+    {img:["images/apply8-1.jpg","images/apply8-2.jpg","images/apply8-3.jpg"],title:"工程机械",info:"压力传感器差压开关在工程机械、矿山机械中的挖机、大型设备的发动机上广泛应用。"}
+];
+
+const proWrap = document.getElementById('proList');
+let allProDom = [];
+
+// 渲染产品列表
+function renderPro(list){
+    proWrap.innerHTML = "";
+    list.forEach((item,index)=>{
+        let html = `
+   <div class="product-item" data-type="${item.type}" onclick="showDetail(${index})">
+    <!-- 卡片内部轮播容器，绑定当前产品图片数组下标data-imgs -->
+    <div class="pro-img pro-card-carousel" data-imgs='${JSON.stringify(item.img)}'>
+        <div class="card-track"></div>
+        <div class="card-dots"></div>
+    </div>
+    <div class="pro-info">
+        <h3>${item.name}</h3>
+        <div class="pro-price">${item.price=="查看详情"?"查看详情":"￥"+item.price}</div>
+        <div class="pro-desc">${item.desc.substring(0,32)}...</div>
+    </div>
+</div>`;
+        proWrap.innerHTML += html;
+    })
+    allProDom = document.querySelectorAll(".product-item");
+}
+renderPro(productData);
+
+// 跳转联系我们
+function goContact(){
+    document.getElementById('detailBox').style.display = "none";
+    document.getElementById('contact').scrollIntoView({behavior:"smooth"});
+}
+
+// 打开产品详情
+function showDetail(idx){
+    let p = productData[idx];
+    // 基础信息赋值
+    document.querySelector('.sm').innerText = p.subTitle;
+    // 1. 清空容器，避免上次的图片残留
+    const imgWrap = document.getElementById('detImgWrap');
+    imgWrap.innerHTML = "";
+
+    // 2. 循环渲染所有图片（1张或多张）
+    p.img.forEach(src => {
+        let img = document.createElement('img');
+        img.src = src;
+        imgWrap.appendChild(img);
+    });
+
+    document.getElementById('dName').innerText = p.name;
+    document.getElementById('dDesc').innerText = p.desc;
+
+    // 版本
+    let verHtml = "";
+    p.versions.forEach(item=> verHtml += `<p>- ${item}</p>`);
+    document.getElementById('verHtml').innerHTML = verHtml;
+    document.querySelector('.version-block').style.display = p.versions.length > 0 ? "block" : "none";
+
+    // 测量范围
+    let rangeHtml = "";
+    p.ranges.forEach(item=> rangeHtml += `<p>- ${item}</p>`);
+    document.getElementById('rangeHtml').innerHTML = rangeHtml;
+    document.querySelector('.range-block').style.display = p.ranges.length > 0 ? "block" : "none";
+
+    // 输出供电
+    let outputHtml = "";
+    p.outputs.forEach(item=> outputHtml += `<p>- ${item}</p>`);
+    document.getElementById('outputHtml').innerHTML = outputHtml;
+    document.querySelector('.output-block').style.display = p.outputs.length > 0 ? "block" : "none";
+
+    // 电气连接
+    let eConHtml = "";
+    p["e-cons"].forEach(item=> eConHtml += `<p>- ${item}</p>`);
+    document.getElementById('e-conHtml').innerHTML = eConHtml;
+    document.querySelector('.e-connect-block').style.display = p["e-cons"].length > 0 ? "block" : "none";
+
+    // 压力连接
+    let pConHtml = "";
+    p["p-cons"].forEach(item=> pConHtml += `<p>- ${item}</p>`);
+    document.getElementById('p-conHtml').innerHTML = pConHtml;
+    document.querySelector('.p-connect-block').style.display = p["p-cons"].length > 0 ? "block" : "none";
+
+    // 显示详情面板并滚动
+    document.getElementById('detailBox').style.display = "block";
+    document.getElementById('detailBox').scrollIntoView({behavior:"smooth"});
+}
+
+// 关闭详情
+function hideDetail(){
+    document.getElementById('detailBox').style.display = "none";
+}
+
+// 分类筛选
+const filterBtns = document.querySelectorAll(".filter-btn");
+filterBtns.forEach(btn=>{
+    btn.onclick = function(){
+        filterBtns.forEach(b=>b.classList.remove("active"));
+        this.classList.add("active");
+        let t = this.dataset.type;
+        allProDom.forEach(i=>{
+            i.classList.toggle('hide', t!=='all' && i.dataset.type!==t);
+        })
+        hideDetail();
+    }
+})
+
+// 应用场景渲染
+const applyWrap = document.getElementById('applyList');
+applyData.forEach(item=>{
+    // 把图片数组转字符串存到自定义属性
+    let imgStr = JSON.stringify(item.img);
+    applyWrap.innerHTML += `
+    <div class="apply-item">
+        <div class="apply-img apply-card-carousel" data-imgs='${imgStr}'>
+            <div class="apply-track"></div>
+            <div class="apply-dots"></div>
+        </div>
+        <div class="apply-text">
+            <h4>${item.title}</h4>
+            <p>${item.info}</p>
+        </div>
+    </div>`;
+})
+
+// 弹窗
+function openPop(idx){
+    let d = productData[idx];
+    document.getElementById('popImg').src=d.img;
+    document.getElementById('popTitle').innerText=d.name;
+    document.getElementById('popPrice').innerText=`${d.price=="询价"?"询价":"￥"+d.price}`;
+    document.getElementById('popDesc').innerText=d.desc;
+    document.getElementById('popMask').style.display='flex';
+}
+function closePop(){
+    document.getElementById('popMask').style.display='none'
+}
+document.getElementById('popMask').onclick=e=>{
+    if(e.target.id==='popMask') closePop();
+};
+
+// 轮播图
+const bannerWrap = document.getElementById("bannerWrap");
+const prev = document.getElementById("prevBtn");
+const next = document.getElementById("nextBtn");
+const dotBox = document.getElementById("dotBox");
+const banLen = bannerWrap.children.length;
+let cur=0,t;
+
+for(let i=0;i<banLen;i++){
+    let d=document.createElement('div');
+    d.className=i===0?'dot active':'dot';
+    d.onclick=()=>{cur=i;updateBan()};
+    dotBox.appendChild(d);
+}
+const dots = dotBox.querySelectorAll('.dot');
+
+function updateBan(){
+    bannerWrap.style.transform=`translateX(-${cur*100}%)`;
+    dots.forEach(d=>d.classList.remove('active'));
+    dots[cur].classList.add('active');
+}
+function auto(){
+    t=setInterval(()=>{
+        cur = cur >= banLen-1 ? 0 : cur+1;
+        updateBan();
+    },3500)
+}
+auto();
+
+next.onclick=()=>{
+    cur = cur >= banLen-1 ? 0 : cur+1;
+    updateBan();
+}
+prev.onclick=()=>{
+    cur = cur <= 0 ? banLen-1 : cur-1;
+    updateBan();
+}
+document.querySelector('.banner').onmouseenter=()=>clearInterval(t);
+document.querySelector('.banner').onmouseleave=()=>auto();
+
+// 表单提交
+document.getElementById('subBtn').onclick=function(){
+    let name = document.getElementById('name').value.trim();
+    let tel = document.getElementById('tel').value.trim();
+    let msg = document.getElementById('msg').value.trim();
+    if(!name){alert('请填写姓名');return;}
+    if(!tel){alert('请填写电话');return;}
+    if(!msg){alert('请填写留言内容');return;}
+    alert('提交成功！【若长时间未与您联系，请直接拨打18621658180】');
+    document.getElementById('name').value='';
+    document.getElementById('tel').value='';
+    document.getElementById('msg').value='';
+}
+// 手机端汉堡菜单切换
+const menuToggle = document.getElementById('menuToggle');
+const navMenu = document.querySelector('.nav-menu');
+
+menuToggle.addEventListener('click', () => {
+  navMenu.classList.toggle('active');
+});
+
+// 点击菜单外区域自动收起
+document.addEventListener('click', (e) => {
+  if (!navMenu.contains(e.target) && !menuToggle.contains(e.target)) {
+    navMenu.classList.remove('active');
+  }
+});
+// 关于我们 图片轮播逻辑
+const aboutWrap = document.getElementById("aboutWrap");
+const aboutPrev = document.getElementById("aboutPrev");
+const aboutNext = document.getElementById("aboutNext");
+const aboutDotBox = document.getElementById("aboutDotBox");
+const aboutLen = aboutWrap.children.length;
+let aboutCur = 0, aboutT;
+
+// 生成轮播圆点
+for(let i = 0; i < aboutLen; i++){
+    let d = document.createElement('div');
+    d.className = i === 0 ? 'dot active' : 'dot';
+    d.onclick = () => { aboutCur = i; updateAboutBan() };
+    aboutDotBox.appendChild(d);
+}
+const aboutDots = aboutDotBox.querySelectorAll('.dot');
+
+// 更新轮播位置
+function updateAboutBan(){
+    aboutWrap.style.transform = `translateX(-${aboutCur * 100}%)`;
+    aboutDots.forEach(d => d.classList.remove('active'));
+    aboutDots[aboutCur].classList.add('active');
+}
+
+// 自动轮播
+function autoAbout(){
+    aboutT = setInterval(() => {
+        aboutCur = aboutCur >= aboutLen - 1 ? 0 : aboutCur + 1;
+        updateAboutBan();
+    }, 3500);
+}
+autoAbout();
+
+// 左右切换
+aboutNext.onclick = () => {
+    aboutCur = aboutCur >= aboutLen - 1 ? 0 : aboutCur + 1;
+    updateAboutBan();
+};
+aboutPrev.onclick = () => {
+    aboutCur = aboutCur <= 0 ? aboutLen - 1 : aboutCur - 1;
+    updateAboutBan();
+};
+
+// 鼠标悬停暂停
+document.querySelector('.about-banner').onmouseenter = () => clearInterval(aboutT);
+document.querySelector('.about-banner').onmouseleave = () => autoAbout();
+// 产品卡片轮播初始化
+function initAllCardCarousel(){
+  const cards = document.querySelectorAll('.pro-card-carousel');
+  cards.forEach(card=>{
+    const imgArr = JSON.parse(card.dataset.imgs);
+    const track = card.querySelector('.card-track');
+    const dotBox = card.querySelector('.card-dots');
+    let cur = 0;
+    const total = imgArr.length;
+    let timer;
+
+    // 填充图片
+    track.innerHTML = "";
+    dotBox.innerHTML = "";
+    imgArr.forEach((src,i)=>{
+      const slide = document.createElement('div');
+      slide.className = 'card-slide';
+      slide.innerHTML = `<img src="${src}">`;
+      track.appendChild(slide);
+
+      const dot = document.createElement('div');
+      dot.className = `card-dot ${i===0?'active':''}`;
+      dot.onclick=(e)=>{
+        e.stopPropagation(); // 不点进详情
+        cur=i;
+        updateCardSlide(track,dotBox,cur,total);
+        resetTimer();
+      }
+      dotBox.appendChild(dot);
+    })
+
+    function updateCardSlide(trackEl,dotBoxEl,idx,totalNum){
+      trackEl.style.transform = `translateX(-${idx*100}%)`;
+      dotBoxEl.querySelectorAll('.card-dot').forEach((d,i)=>{
+        d.classList.toggle('active',i===idx);
+      })
+    }
+    function next(){
+      cur = (cur+1)%total;
+      updateCardSlide(track,dotBox,cur,total);
+    }
+    function startTimer(){
+      if(total<=1) return;
+      timer = setInterval(next,3000);
+    }
+    function resetTimer(){
+      clearInterval(timer);
+      startTimer();
+    }
+    startTimer();
+
+    // 鼠标悬停暂停
+    card.addEventListener('mouseenter',()=>clearInterval(timer));
+    card.addEventListener('mouseleave',()=>startTimer());
+    // 点击圆点阻止冒泡（不会触发打开详情）
+    card.addEventListener('click',(e)=>{
+      if(e.target.classList.contains('card-dot')) e.stopPropagation();
+    })
+  })
+}
+// 渲染完产品列表再初始化轮播
+renderPro(productData);
+initAllCardCarousel();
+// 初始化应用场景卡片淡入轮播
+function initAllApplyCarousel(){
+  const applyCards = document.querySelectorAll('.apply-card-carousel');
+  applyCards.forEach(card=>{
+    const imgArr = JSON.parse(card.dataset.imgs);
+    const track = card.querySelector('.apply-track');
+    const dotBox = card.querySelector('.apply-dots');
+    let cur = 0;
+    const total = imgArr.length;
+    let timer;
+
+    track.innerHTML = "";
+    dotBox.innerHTML = "";
+    imgArr.forEach((src,i)=>{
+      const slide = document.createElement('div');
+      slide.className = `apply-slide ${i===0?'active':''}`;
+      slide.innerHTML = `<img src="${src}">`;
+      track.appendChild(slide);
+
+      const dot = document.createElement('div');
+      dot.className = `apply-dot ${i===0?'active':''}`;
+      dot.onclick = (e)=>{
+        e.stopPropagation();
+        cur = i;
+        updateApplyFade(track, dotBox, cur, total);
+        resetTimer();
+      }
+      dotBox.appendChild(dot);
+    })
+
+    // 淡入切换核心函数
+    function updateApplyFade(trackEl, dotBoxEl, idx, totalNum){
+      const slides = trackEl.querySelectorAll('.apply-slide');
+      const dots = dotBoxEl.querySelectorAll('.apply-dot');
+      slides.forEach((s,i)=> s.classList.toggle('active', i === idx));
+      dots.forEach((d,i)=> d.classList.toggle('active', i === idx));
+    }
+    function next(){
+      cur = (cur + 1) % total;
+      updateApplyFade(track, dotBox, cur, total);
+    }
+    function startTimer(){
+      if(total <= 1) return;
+      timer = setInterval(next,3000);
+    }
+    function resetTimer(){
+      clearInterval(timer);
+      startTimer();
+    }
+    startTimer();
+
+    card.addEventListener('mouseenter', ()=>clearInterval(timer));
+    card.addEventListener('mouseleave', ()=>startTimer());
+  })
+}
+// 渲染完执行初始化
+initAllApplyCarousel();
+
+</script>
+</body>
+</html>
